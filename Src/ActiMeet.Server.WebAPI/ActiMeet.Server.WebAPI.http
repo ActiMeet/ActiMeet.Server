@@ -1,0 +1,6 @@
+@ActiMeet.Server.WebAPI_HostAddress = http://localhost:5195
+
+GET {{ActiMeet.Server.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
