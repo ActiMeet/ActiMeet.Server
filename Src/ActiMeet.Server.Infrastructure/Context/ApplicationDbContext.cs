@@ -1,6 +1,11 @@
-﻿using ActiMeet.Server.Application.Interfaces.UnitOfWorks;
-using ActiMeet.Server.Domain.Abstractions;
+﻿using ActiMeet.Server.Domain.Abstractions;
+using ActiMeet.Server.Domain.Activities;
+using ActiMeet.Server.Domain.ActivityParticipants;
+using ActiMeet.Server.Domain.Categories;
 using ActiMeet.Server.Domain.Employees;
+using ActiMeet.Server.Domain.Locations;
+using ActiMeet.Server.Domain.RoomParticipants;
+using ActiMeet.Server.Domain.Rooms;
 using ActiMeet.Server.Domain.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +20,12 @@ public sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRo
 	}
 
 	public DbSet<Employee> Employees { get; set; }
+	public DbSet<Activity> Activities { get; set; }
+	public DbSet<ActivityParticipant> ActivityParticipants { get; set; }
+	public DbSet<Category> Categories { get; set; }
+	public DbSet<Location> Locations { get; set; }
+	public DbSet<Room> Rooms { get; set; }
+	public DbSet<RoomParticipant> RoomParticipants { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
