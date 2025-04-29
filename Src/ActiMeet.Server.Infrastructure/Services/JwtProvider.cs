@@ -19,7 +19,7 @@ public class JwtProvider(
 		};
 
 
-		var expires = DateTime.Now.AddDays(1);
+		var expires = DateTime.Now.AddMonths(1);
 
 		SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(options.Value.SecretKey));
 		SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha512);

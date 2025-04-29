@@ -46,7 +46,10 @@ internal sealed class EmployeeCreateCommandHandler(
 
 		await unitOfWork.SaveChangesAsync(cancellationToken);
 
-		return "Personel kaydı başarıyla tamamlandı!";
+		// todo: mail veya sms gönderme işlemleri yapılacak.
+		// todo: notification içinde domain event kullanabilirim.
+
+		return "Çalışan kaydı başarıyla yapıldı!";
 	}
 }
 

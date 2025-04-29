@@ -28,6 +28,8 @@ public class Program
         
         builder.Services.AddCors();
         builder.Services.AddOpenApi();
+		
+		// OData
 		builder.Services.AddControllers().AddOData(opt => opt // openapi ekstra sorgu
 			  .Select()
 			  .Filter()
@@ -58,12 +60,13 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseCors(x => x // Openapi için cors
-						.AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials()
-                        .SetIsOriginAllowed(t => true)
-                        );
+        app.UseCors(x => x
+			.AllowAnyHeader()
+			.AllowAnyMethod()
+			.AllowCredentials()
+			.SetIsOriginAllowed(t => true)
+			.SetPreflightMaxAge(TimeSpan.FromMinutes(10)) // Aynı browser'dan gelen istekler 10dk boyunca ikinci defa CORS politikası kontrolüne girmiyor.
+			);
 
 		app.RegisterRoutes();
 

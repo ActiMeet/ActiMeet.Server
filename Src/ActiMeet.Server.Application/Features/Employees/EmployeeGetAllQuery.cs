@@ -1,5 +1,4 @@
-﻿using ActiMeet.Server.Application.Interfaces.Repositories;
-using ActiMeet.Server.Application.Interfaces.UnitOfWorks;
+﻿using ActiMeet.Server.Application.Interfaces.UnitOfWorks;
 using ActiMeet.Server.Domain.Abstractions;
 using ActiMeet.Server.Domain.Employees;
 using ActiMeet.Server.Domain.Users;
