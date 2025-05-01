@@ -25,6 +25,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
 		builder.Property(p => p.Salary).HasColumnType("money");
 
-		builder.HasQueryFilter(x => !x.IsDeleted);
+		//builder.HasQueryFilter(x => !x.IsDeleted);
 	}
 }

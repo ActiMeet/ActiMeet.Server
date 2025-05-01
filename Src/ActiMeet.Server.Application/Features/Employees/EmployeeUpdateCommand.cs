@@ -1,7 +1,6 @@
 ﻿using ActiMeet.Server.Application.Interfaces.UnitOfWorks;
 using ActiMeet.Server.Domain.Employees;
 using FluentValidation;
-using Mapster;
 using MediatR;
 using TS.Result;
 
@@ -12,9 +11,7 @@ public sealed record EmployeeUpdateCommand(
 	string LastName,
 	DateOnly BirthOfDate,
 	decimal Salary,
-	PersonnelInformation PersonnelInformation,
-	Address? Address,
-	bool IsActive) : IRequest<Result<string>>;
+	string IdentityNumber) : IRequest<Result<string>>;
 
 public sealed class EmployeeUpdateCommandValidator : AbstractValidator<EmployeeUpdateCommand>
 {
@@ -22,9 +19,10 @@ public sealed class EmployeeUpdateCommandValidator : AbstractValidator<EmployeeU
 	{
 		RuleFor(x => x.FirstName).MinimumLength(3).WithMessage("Ad alanı en az 3 karakter olmalıdır!");
 		RuleFor(x => x.LastName).MinimumLength(3).WithMessage("Soyad alanı en az 3 karakter olmalıdır!");
-		RuleFor(x => x.PersonnelInformation.IdentityNumber)
+		RuleFor(x => x.IdentityNumber)
 			.MinimumLength(11).WithMessage("Geçerli bir TC Numarası girin!")
 			.MaximumLength(11).WithMessage("Geçerli bir TC Numarası girin!");
+		RuleFor(x => x.Salary).GreaterThanOrEqualTo(0).WithMessage("Maaş değeri 0'dan küçük olamaz.");
 	}
 }
 
@@ -39,14 +37,21 @@ internal sealed class EmployeeUpdateCommandHandler(
 			return
 				Result<string>.Failure("Çalışan bulunamadı");
 
-		var isEmployeeExists = await unitOfWork.GetReadRepository<Employee>().AnyAsync(p => p.PersonnelInformation.IdentityNumber == request.PersonnelInformation.IdentityNumber, cancellationToken);
+		if (employee.IsDeleted)
+			return
+				Result<string>.Failure("Bu çalışan silinmiş, silinen çalışanların bilgilerini güncelleyemezsiniz.");
+
+		var isEmployeeExists = await unitOfWork.GetReadRepository<Employee>().AnyAsync(p => p.PersonnelInformation.IdentityNumber == request.IdentityNumber && p.Id != request.Id, cancellationToken);
 
 		if (isEmployeeExists)
 			return 
 				Result<string>.Failure("Bu TC numarası daha önce kaydedilmiş");
 
-
-		request.Adapt(employee);
+		employee.FirstName = request.FirstName;
+		employee.LastName = request.LastName;
+		employee.BirthOfDate = request.BirthOfDate;
+		employee.Salary = request.Salary;
+		employee.PersonnelInformation.IdentityNumber = request.IdentityNumber;
 
 		unitOfWork.GetWriteRepository<Employee>().Update(employee);
 
