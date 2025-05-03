@@ -14,7 +14,12 @@ public static class AuthModule
 			async (ISender sender, LoginCommand request, CancellationToken cancellationToken) =>
 			{
 				var response = await sender.Send(request, cancellationToken);
-				return response.IsSuccessful ? Results.Ok(response) : Results.InternalServerError(response);
+
+				if (response.IsSuccessful)
+					return Results.Ok(response);
+
+				return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
+
 			})
 			.Produces<Result<LoginCommandResponse>>();
 	}

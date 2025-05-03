@@ -15,6 +15,8 @@ public sealed class EmployeeGetQueryResponse : BaseEntityDto
 	public DateOnly BirthOfDate { get; set; }
 	public decimal Salary { get; set; }
 	public string IdentityNumber { get; set; } = default!;
+	public string Email { get; set; } = default!;
+	public string Phone1 { get; set; } = default!;
 }
 
 internal sealed class EmployeeGetQueryHandler(
@@ -35,6 +37,8 @@ internal sealed class EmployeeGetQueryHandler(
 			BirthOfDate = employee.BirthOfDate,
 			Salary = employee.Salary,
 			IdentityNumber = employee.PersonnelInformation.IdentityNumber,
+			Email = employee.PersonnelInformation.Email ?? string.Empty,
+			Phone1 = employee.PersonnelInformation.Phone1 ?? string.Empty,
 			CreateAt = employee.CreateAt,
 			UpdateAt = employee.UpdateAt,
 			DeleteAt = employee.DeleteAt,

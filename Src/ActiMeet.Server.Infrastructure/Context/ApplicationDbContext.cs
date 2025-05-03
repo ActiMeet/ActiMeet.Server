@@ -42,7 +42,11 @@ public sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRo
 		var entries = ChangeTracker.Entries<BaseEntity>();
 
 		HttpContextAccessor httpContextAccessor = new();
-		string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(p => p.Type == "user-id").Value;
+		string? userIdString = httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(p => p.Type == "user-id")?.Value;
+		
+		if (userIdString is null)
+			return base.SaveChangesAsync(cancellationToken);
+		
 		Guid userId = Guid.Parse(userIdString);
 
 		foreach (var entry in entries)
